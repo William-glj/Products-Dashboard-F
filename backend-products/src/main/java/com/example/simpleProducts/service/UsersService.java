@@ -106,15 +106,15 @@ public class UsersService {
     //Añadir borrado en cascada, eliminar usuarios de log_user
     public ResponseEntity<UsersJPA> deleteUser(Integer id) {
 
-       int count = usersRepository.countUserLogs(id);
+       int count = usersRepository.countUserLogs(id); //Revisamos si el usuario tiene registros en la entidad Log
 
        Optional<UsersJPA> searchUser = usersRepository.findById(id);
        UsersJPA userEliminate = searchUser.get();
 
        if (count >= 1){
-           logRepository.deleteAllByUserId(id);
-           usersRepository.deleteById(id);
-           return ResponseEntity.ok(userEliminate);
+           logRepository.deleteAllByUserId(id); //Eliminamos todos los registros de la entidad Log, que nos impedían eliminar el usuario.
+           usersRepository.deleteById(id); //Eliminamos el usuario de la entindad Usuario.
+           return ResponseEntity.ok(userEliminate); //Devolvemos el usuario eliminado.
        }
 
         return ResponseEntity.notFound().build();
@@ -125,12 +125,12 @@ public class UsersService {
     public Optional<UsersJPA> verifierPassword (String mail, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
-        UsersJPA foundUser =  usersRepository.findByCompanyMail(mail);
-        String manualPassword = HashManager.encrypt(password);
+        UsersJPA foundUser =  usersRepository.findByCompanyMail(mail); //Buscamos el usuario por su correo de empresa.
+        String manualPassword = HashManager.encrypt(password); //Encriptamos la contraseña.
 
         if (foundUser != null) {
             if (manualPassword.equals(foundUser.getPsswrd())) {
-                return Optional.of(foundUser);
+                return Optional.of(foundUser); //Si el usuario existe y la contraseña coincide lo retornamos.
             }
         }
 

@@ -1,15 +1,12 @@
-//import React from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-//import App from './App';
-import HomeForm from './HomeForm';
+import POF from './POF';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
-  // <App/>
-  <HomeForm/>
-
+  <BrowserRouter>
+    <POF />
+  </BrowserRouter>
 );
-
-

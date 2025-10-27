@@ -51,7 +51,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-
+        <!-- Security  Re-plantear su uso
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+            -->
 
 		<!-- DevTools -->
 		<dependency>
@@ -74,13 +79,8 @@
 		</dependency>
 	</dependencies>
 
-
-
 	<!--
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
+
     <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-test</artifactId>

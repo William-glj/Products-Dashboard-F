@@ -1,30 +1,25 @@
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
+import HomeForm from './HomeForm';
+import HomePage from './HomePage';
+import { UserProvider } from './UserOnline';
 
+function POF() {
+  return (
+    <UserProvider>
+      <Routes>
+        <Route path="/" element={<HomeForm />} />
+        
+        <Route path="/home/newpage" element={<HomePage />} />
 
-
- function nothing() {
-    return(
-        <AppProvider>
-        <Nav></Nav>
-            <Routes>
-            <Route path='/api/verifierUser' element={  <HomeForm/>}>
-
-
-            </Route>
-            </Routes>
-        </AppProvider>
-     
-
-    )
-
+      </Routes>
+</UserProvider>
+  );
 }
 
-export default nothing;
+export default POF;
 
 
-
- 
 
 
 

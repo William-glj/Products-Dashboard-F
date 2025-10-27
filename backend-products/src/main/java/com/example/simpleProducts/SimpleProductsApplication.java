@@ -1,5 +1,6 @@
 package com.example.simpleProducts;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +9,7 @@ public class SimpleProductsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SimpleProductsApplication.class, args);
+        System.out.println("Server on - Server en marcha");
 	}
 
 }
