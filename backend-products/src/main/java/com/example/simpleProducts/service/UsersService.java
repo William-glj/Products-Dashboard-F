@@ -31,33 +31,37 @@ public class UsersService {
 
     /*Operaciones CRUD
     Todo aún sin probar
-    Tareas - ¿Acabadas? - ¿Probadas?
-    Create - Si
-    Read - Si
-    Update - Si
-    Delete - Si
-    Validar usuario - si
+    Tareas - ¿Acabadas? -   llamadas -    ¿Probadas?
+    Create - Si             -   POST         -
+    Read - Si               -   Get        -
+    Update - Si             -           -
+    Delete - Si             -           -
+    Validar usuario - si    -           -
 
-
+Operación	¿Acabada?	Método HTTP	Descripción
+Create	Sí	POST	Crear un nuevo recurso (usuario, producto, etc.)
+Read	Sí	GET	Obtener uno o varios recursos
+Update	Sí	PUT o PATCH	Modificar un recurso existente (PUT reemplaza, PATCH actualiza parcialmente)
+Delete	Sí	DELETE	Eliminar un recurso
+Validar usuario	Sí	POST
 
 
 
      */
 
-
+    //Post
     public ResponseEntity<UsersJPA> createUserByObj (UsersJPA values){
         return ResponseEntity.ok(usersRepository.save(values));
     }
-
+    //Post
     public ResponseEntity<UsersJPA> createUserByParams (String name, String lastNameEx, Integer ageEx, Rol rolEx, String psswrd){
-
         UsersJPA storeValue = new UsersJPA(name,lastNameEx,ageEx,rolEx,psswrd);
         usersRepository.save(storeValue);
         return ResponseEntity.ok(storeValue);
     }
 
 
-
+    //Get
     public List<UsersJPA> readAllUsers(){
         /* Entregan el mismo resultado.
         ArrayList<UsersJPA> xxx = new ArrayList<>();
@@ -66,6 +70,11 @@ public class UsersService {
         */
         return List.copyOf((Collection<? extends UsersJPA>) usersRepository.findAll());
     }
+    //Get
+    public  List<UsersJPA> readOnlyRolUsers(Rol rolEx){
+        return List.copyOf((Collection<? extends UsersJPA>)  usersRepository.findByRol(rolEx));
+    }
+    //Get
     public Optional<UsersJPA> readUserById(Integer id){
         return usersRepository.findById(id);
     }
@@ -82,24 +91,14 @@ public class UsersService {
             newUserObj.setMobile(values.getMobile());
             newUserObj.setPsswrd(values.getPsswrd());
 
-
-
-            /*Ahora con la función/trigger en MySQL esta acción queda en desuso.
-            // Solo encriptar si hay una nueva contraseña
-            if (values.getPsswrd() != null && !values.getPsswrd().isEmpty()) {
-                try {
-                    String ciPsswrd = HashManager.encrypt(values.getPsswrd());
-                    newUserObj.setPsswrd(ciPsswrd);
-                } catch (Exception e) {
-                    e.printStackTrace(); // mejor que solo println
-                    System.out.println("Error en la clase UserService, método updateUser, al encriptar la contraseña");
-                }
-            }
-            */
             UsersJPA updateCase = usersRepository.save(newUserObj);
             return ResponseEntity.ok(updateCase);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.simpleProducts.repository;
 
+import com.example.simpleProducts.classBox.Rol;
 import com.example.simpleProducts.entity.UsersJPA;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.data.jpa.repository.Query;
@@ -20,7 +21,7 @@ public interface UsersRepository extends CrudRepository<UsersJPA,Integer> {
     @Query("SELECT u FROM UsersJPA u WHERE u.companyMail = :mail")
     UsersJPA userExist(@Param("mail") String mail);
     */
-
+    UsersJPA findByRol(Rol rol);
 
 
 }

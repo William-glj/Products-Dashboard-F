@@ -17,28 +17,58 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Optional;
 
+//Permite trabajar con JSON/Rest
 @RestController
+//Ruta Raiz
 @RequestMapping("/")
+//Para comunicar y manejar bloqueos con otro servicio orientamos al servidor
+@CrossOrigin(origins = "http://localhost:3000")
 public class MainController {
 
     /*
     Problemas intercomunicando Spring boot en localhost:8080
     con React en localhost:3000 / 3030
+    Dividir las ramas de los controlladores
      */
 
 
     @Autowired
     private UsersService usersService;
 
-    /* Borrar a futuro
-    @Autowired
-    private static String userName;
-    */
+    //Verificación de las credenciales de usuario.
+    // Ruta: localhost:8080/api/user/verifyUser
+    // Parámetros email y contraseña.
+    @PostMapping("api/user/verifyUser")
+    public ResponseEntity<?> exampleNoName(@RequestParam("mail") String mail,
+                                           @RequestParam("password") String password)
+            throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
-    //"/api/"+ userName +"/allUsers"
+        Optional<UsersJPA> newObject = usersService.verifierPassword(mail, password);
+
+        if (newObject.isPresent()) {
+            UserDTO userOnline =
+                    new UserDTO(
+                            newObject.get().getFirstName()
+                            ,newObject.get().getCompanyMail()
+                            ,newObject.get().getRol().toString()
+                    );
+
+            System.out.println("Ejecución prevista");
+            return ResponseEntity.ok(Map.of(
+                    "userOnline",userOnline
+            ));
+        }
+        System.out.println("Error de formulario");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Credenciales inválidas"));
+    }
+
+
+
+
     //Obtención de usuarios bajo control de Rol.
-    //Ruta: localhost:8080/api/User/allUsers/vone
-    @GetMapping("api/User/allUsers/vone")
+    //Ruta: localhost:8080/api/user/allUsers
+    @GetMapping("api/user/allUsers")
     public ResponseEntity<?> getAllUsersByRolControl (@RequestParam Rol rol){
         if (rol.equals(Rol.Administrador)){
             return ResponseEntity.ok(Map.of("ListUsers",usersService.readAllUsers()));
@@ -49,57 +79,70 @@ public class MainController {
     }
 
 
+    //Obtención de un conjunto de usuarios por rol.
+    //Ruta: localhost:8080/api/user/rolUser
+    @GetMapping("api/user/rolUser")
+    public ResponseEntity<?> getAllUserOFSpecicallyRol (@RequestParam Rol rol, @RequestParam Rol rolEx ){
+        if (rol.equals(Rol.Administrador)){
+            return ResponseEntity.ok(Map.of("ListUsers",usersService.readOnlyRolUsers(rolEx)));
+        }
 
-
-
-/*
-
-    //Obtención de los usuarios presentes.
-    //Clase restringida por SecurityClass
-    //Ruta: localhost:8080/api/User/allUsers/vtwo
-    @GetMapping("api/User/allUsers/vtwo")
-    public ResponseEntity<?> getAllUsersBySecurityControl (){
-
-            return ResponseEntity.ok(Map.of("ListUsers",usersService.readAllUsers()));
-
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "No tienes autorización para esta función"));
     }
 
 
-*/
+    //Obtención de un usuario en específico.
+    //Ruta: localhost:8080/api/user/searchUser
+    @GetMapping("api/user/searchUser")
+    public ResponseEntity<?> findOneUser (@RequestParam Rol rol, @RequestParam Integer id){
+        if (rol.equals(Rol.Administrador)){
+            return ResponseEntity.ok(usersService.readUserById(id));
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "No tienes autorización para esta función"));
+    }
 
 
 
-    //Verificación de las credenciales de usuario.
-    // Ruta: localhost:8080/api/User/verifierUser
-    // Parámetros email y contraseña.
-    @GetMapping("api/User/verifierUser")
-    public ResponseEntity<?> exampleNoName(@RequestParam("mail") String mail,
-                                           @RequestParam("password") String password)
-            throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    //Crear un nuevo usuario en la entidad users/UsersJPA.
+    //Ruta: localhost:8080/api/user/create
+    @PostMapping("api/user/create")
+    public ResponseEntity<?> insertNewUser (@RequestParam Rol rol,@RequestBody UsersJPA userBody){
+        if (rol.equals(Rol.Administrador)){
 
-        Optional<UsersJPA> newObject = usersService.verifierPassword(mail, password);
-
-        if (newObject.isPresent()) {
-            UserDTO userJS = new UserDTO();
-
-            userJS.setFirstName(newObject.get().getFirstName());
-            userJS.setCompanyMail((newObject.get().getCompanyMail()));
-            userJS.setRol(newObject.get().getRol().toString());
-
-            System.out.println("Ejecución prevista");
-            return ResponseEntity.ok(Map.of(
-                    "firstName", userJS.getFirstName(),
-                    "email", userJS.getCompanyMail(),
-                    "rol", userJS.getRol()
-            ));
+            usersService.createUserByObj(userBody);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 
         }
-        System.out.println("Error de formulario");
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "Credenciales inválidas"));
+                .body(Map.of("error", "No tienes autorización para esta función"));
     }
 
 
+    //Crear un nuevo usuario en la entidad users/UsersJPA.
+    //Ruta: localhost:8080/api/user/create
+    @PostMapping("api/user/createBy")
+    public ResponseEntity<?> insertOtherUser (@RequestParam Rol rol
+            ,@RequestParam String nameEx
+            ,@RequestParam String lastNameEx
+            ,@RequestParam Integer ageEx
+            ,@RequestParam Rol rolEx
+            ,@RequestParam String psswrdEx
+
+    ){
+        if (rol.equals(Rol.Administrador)){
+
+            usersService.createUserByParams(nameEx,lastNameEx,ageEx,rolEx,psswrdEx);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "No tienes autorización para esta función"));
+    }
 
 
 

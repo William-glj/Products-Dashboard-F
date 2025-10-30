@@ -2,13 +2,10 @@ package com.example.simpleProducts.classBox;
 
 import lombok.Data;
 
-@Data
-public class UserDTO {
-
-        private String firstName;
-        private String companyMail;
-        private String rol;
-
-
-
+public record UserDTO(String firstName, String companyMail, String rol) {
 }
+
+
+
+
+

@@ -8,7 +8,7 @@ function Form() {
   const navigate = useNavigate();
 
 
- const {user, setUser } = useContext(UserOnline);
+ const { setUser } = useContext(UserOnline);
 
   
 
@@ -16,20 +16,28 @@ function Form() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`/api/verifierUser?mail=${encodeURIComponent(mail)}&password=${encodeURIComponent(password)}`);
+    
+      const response = await fetch('api/user/verifyUser', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: `mail=${encodeURIComponent(mail)}&password=${encodeURIComponent(password)}`
+});
+
       const data = await response.json();
       console.log("Respuesta del backend:", data);
-     setUser(data.userOnline);
-      if (response.ok && data.userOnline) {
-        setUser(data);
-          setUser(data.userOnline); // guarda el usuario
-       navigate(`/home/newpage`); 
-        //  navigate(`/home/${data.userOnline.firstName}`); // redirige correctamente
+    
+   
+
+    if (response.ok & data.userOnline != null) {
+       
+             
+      setUser(data.userOnline); // guarda el usuario
+      //navigate(`/home/newpage`); 
+      navigate(`/home/${data.userOnline.firstName}`); // redirige correctamente
       } else {
- setUser(data.userOnline);
-  setUser(data);
-        // navigate(`/home/${data.userOnline.firstName}`); // redirige correctamente
-        navigate(`/home/newpage`); 
+       
         alert(data.error || "Credenciales inválidas");
       }
 

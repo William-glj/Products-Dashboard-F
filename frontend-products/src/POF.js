@@ -10,8 +10,8 @@ function POF() {
       <Routes>
         <Route path="/" element={<HomeForm />} />
         
-        <Route path="/home/newpage" element={<HomePage />} />
-
+        <Route path="/home/:firstName" element={<HomePage />} />
+   
       </Routes>
 </UserProvider>
   );
@@ -19,7 +19,7 @@ function POF() {
 
 export default POF;
 
-
+// <Route path="/home/newPage" element={<HomePage />} /> 
 
 
 
