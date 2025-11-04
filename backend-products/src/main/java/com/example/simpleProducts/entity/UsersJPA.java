@@ -1,6 +1,7 @@
 package com.example.simpleProducts.entity;
 
 import com.example.simpleProducts.classBox.Rol;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,13 +18,17 @@ public class UsersJPA {
     private Integer idUser;
 
     @Column(name = "first_name", length = 60)
+    @JsonProperty("first_name")
     private String firstName;
 
     @Column(name = "last_name", length = 60)
+    @JsonProperty("last_name")
     private String lastName;
 
     @Column(name = "company_mail")
+    @JsonProperty("company_mail")
     private String companyMail;
+
 
     private int age;
 

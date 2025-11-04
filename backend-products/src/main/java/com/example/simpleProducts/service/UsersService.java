@@ -9,6 +9,7 @@ import com.example.simpleProducts.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +18,20 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 @NoArgsConstructor
 @AllArgsConstructor
-@Transactional(readOnly = true)//Automáticamente se encarga de rollsback y commits
+@Transactional(readOnly = false)//Automáticamente se encarga de rollsback y commits
 public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
     @Autowired
     private LogRepository logRepository;
+
+
 
     /*Operaciones CRUD
     Todo aún sin probar
@@ -50,11 +54,21 @@ Validar usuario	Sí	POST
      */
 
     //Post
-    public ResponseEntity<UsersJPA> createUserByObj (UsersJPA values){
-        return ResponseEntity.ok(usersRepository.save(values));
+    public ResponseEntity<?> createUserByObj(UsersJPA values) {
+        if (usersRepository.findByCompanyMail(values.getCompanyMail()) != null) {
+            //System.out.println("Ejecución prevista");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Es probable que el usuario ya exista, porque el correo está en uso"));
+        }
+
+        UsersJPA savedUser = usersRepository.save(values);
+        return ResponseEntity.ok(savedUser);
     }
+
     //Post
     public ResponseEntity<UsersJPA> createUserByParams (String name, String lastNameEx, Integer ageEx, Rol rolEx, String psswrd){
+
+
         UsersJPA storeValue = new UsersJPA(name,lastNameEx,ageEx,rolEx,psswrd);
         usersRepository.save(storeValue);
         return ResponseEntity.ok(storeValue);
@@ -79,8 +93,6 @@ Validar usuario	Sí	POST
         return usersRepository.findById(id);
     }
 
-
-
     public ResponseEntity<UsersJPA> updateUser (UsersJPA values)  {
 
         return usersRepository.findById(values.getIdUser()).map(newUserObj -> {
@@ -95,12 +107,6 @@ Validar usuario	Sí	POST
             return ResponseEntity.ok(updateCase);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
-
-
-
-
 
     //Añadir borrado en cascada, eliminar usuarios de log_user
     public ResponseEntity<UsersJPA> deleteUser(Integer id) {
@@ -119,7 +125,6 @@ Validar usuario	Sí	POST
         return ResponseEntity.notFound().build();
 
     }
-
 
     public Optional<UsersJPA> verifierPassword (String mail, String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {

@@ -39,7 +39,7 @@ public class MainController {
     // Ruta: localhost:8080/api/user/verifyUser
     // Parámetros email y contraseña.
     @PostMapping("api/user/verifyUser")
-    public ResponseEntity<?> exampleNoName(@RequestParam("mail") String mail,
+    public ResponseEntity<?> verifyUser(@RequestParam("mail") String mail,
                                            @RequestParam("password") String password)
             throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
@@ -111,7 +111,6 @@ public class MainController {
     @PostMapping("api/user/create")
     public ResponseEntity<?> insertNewUser (@RequestParam Rol rol,@RequestBody UsersJPA userBody){
         if (rol.equals(Rol.Administrador)){
-
             usersService.createUserByObj(userBody);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
 
