@@ -25,7 +25,7 @@ function Form() {
       const data = await response.json();
       console.log("Respuesta del backend:", data);
     
-    if (response.ok & data.userOnline != null) {
+      if (response.ok & data.userOnline != null) {
        
       setUser(data.userOnline); // guarda el usuario
       navigate(`/home/${data.userOnline.firstName}`); // redirige correctamente
@@ -39,7 +39,7 @@ function Form() {
 
 
 
-        //alert(data.error || "Credenciales inválidas");
+        
       }
 
 

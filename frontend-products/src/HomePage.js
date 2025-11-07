@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { UserOnline } from './UserOnline';
 import { useNotification } from './NotificationContext';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
 function HomePage() {
   const { notify } = useNotification(); 
   const { user, setUser } = useContext(UserOnline);
@@ -36,7 +38,10 @@ function HomePage() {
       <header>
         <ul>
           <li>Usuarios</li>
-          <li>Productos</li>
+
+          <li>
+          <Link to={`/home/${user?.firstName}/products` || "Nada"}>Productos</Link>
+          </li>
           <li>Extra</li>
           <li>Extra</li>
           <li>Extra</li>
