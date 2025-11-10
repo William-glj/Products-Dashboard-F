@@ -1,5 +1,6 @@
 package com.example.simpleProducts.controller;
 
+import com.example.simpleProducts.service.PictureService;
 import com.example.simpleProducts.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,19 +22,21 @@ public class ProductController {
 
 
 
+
     //Obtener todos los productos presentes en la entidad.
     //Ruta: localhost:8080/api/products/all
     @GetMapping("all")
     public ResponseEntity<?> getProducts (){
 
-        if (productsService.readAll().isEmpty()) {
-            System.out.println("Mala ejecución");
+        if (productsService.productAddImage().isEmpty()) {
+            System.out.println("Mala ejecución de productos.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se ha encontrado");
         }
 
-        System.out.println(productsService.readAll());
+        System.out.println("Ejecución de productos existosa");
+        System.out.println(productsService.productAddImage());
 
-        return ResponseEntity.ok(Map.of("List",productsService.readAll()));
+        return ResponseEntity.ok(Map.of("List",productsService.productAddImage()));
 
     }
 

@@ -1,22 +1,15 @@
 package com.example.simpleProducts.service;
 
-import com.example.simpleProducts.classBox.Category;
 import com.example.simpleProducts.entity.ProductsJPA;
-import com.example.simpleProducts.entity.UsersJPA;
+import com.example.simpleProducts.repository.PictureRepository;
 import com.example.simpleProducts.repository.ProductsRepository;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -24,7 +17,14 @@ import java.util.Optional;
 public class ProductsService {
 
     @Autowired
-    private ProductsRepository object;
+    private ProductsRepository productsRepository;
+
+    @Autowired
+    private PictureRepository pictureRepository;
+
+
+
+
       /*Operaciones CRUD
     Todo aún sin probar
     Tareas - ¿Acabadas?
@@ -35,32 +35,62 @@ public class ProductsService {
      */
 
     public ResponseEntity<ProductsJPA> createProduct (ProductsJPA value){
-        return ResponseEntity.ok(object.save(value));
+        return ResponseEntity.ok(productsRepository.save(value));
     }
     public List<ProductsJPA> readAll(){
 
-        return List.copyOf((Collection<? extends ProductsJPA>) object.findAll());
+        return List.copyOf((Collection<? extends ProductsJPA>) productsRepository.findAll());
+
     }
+
+
+    public List<Map<String, Object>> productAddImage() {
+
+        Iterable<ProductsJPA> products = productsRepository.findAll();
+
+        List<Map<String, Object>> result = new ArrayList<>();
+
+
+        //foreach donde un product/producto vacío recorre cada products/producto de la lista.
+        for (ProductsJPA product : products) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("isbn", product.getIsbn());
+            map.put("productName", product.getProductName());
+            map.put("information", product.getInformation());
+            map.put("category", product.getCategory());
+
+            // Obtener imágenes asociadas
+            List<String> images = pictureRepository.collectImage(product.getIsbn());
+            map.put("images", images);
+
+            result.add(map);
+        }
+
+        return result;
+    }
+
+
+
     public Optional<ProductsJPA> readById(Long isbn){
-        return object.findById(isbn);
+        return productsRepository.findById(isbn);
     }
     public ResponseEntity<ProductsJPA> updateProducts (ProductsJPA values){
 
-        return object.findById(values.getIsbn()).map(
+        return productsRepository.findById(values.getIsbn()).map(
 
                 newObject -> {
                     newObject.setProductName(values.getProductName());
                     newObject.setInformation(values.getInformation());
                     newObject.setCategory(values.getCategory());
 
-                   ProductsJPA updateCase = object.save(newObject);
+                   ProductsJPA updateCase = productsRepository.save(newObject);
                    return ResponseEntity.ok(updateCase);
                 }).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<ProductsJPA>deleteById(Long id){
 
-        object.deleteById(id);
+        productsRepository.deleteById(id);
         return ResponseEntity.ok().build();
 
 

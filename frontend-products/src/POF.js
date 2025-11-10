@@ -1,14 +1,14 @@
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
-import HomeForm from './HomeForm';
-import HomePage from './HomePage';
-import ProductsView from './ProductsView';
-import { UserProvider } from './UserOnline';
-import { ProductProvider } from './ProductOnline';
-import { NotificationProvider } from './NotificationProvider';
+import HomeForm from './viewerpage/HomeForm';
+import HomePage from './viewerpage/HomePage';
+import ProductsView from './viewerpage/ProductsView';
+import { UserProvider } from './class/UserOnline';
+import { ProductProvider } from './class/ProductOnline';
+import { NotificationProvider } from './class/NotificationProvider';
 
 
-//Dentro de  <UserProvider> se encuentrán los componentes hijos con acceso.
+
 function POF() {
   return (
     <UserProvider>
@@ -20,6 +20,7 @@ function POF() {
                         <Route path="/home/:firstName" element={<HomePage />} />
                         <Route path="/home/:firstName/products" element={<ProductsView />} />
                     </Routes>
+
           </ProductProvider>
       </NotificationProvider>
     </UserProvider> 

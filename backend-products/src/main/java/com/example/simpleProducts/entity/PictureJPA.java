@@ -9,7 +9,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class PictureJPA {
     //Check - si
     @Id
@@ -25,6 +24,16 @@ public class PictureJPA {
             referencedColumnName = "isbn",
             insertable = false, updatable = false)
     private ProductsJPA product;
+
+
+
+    public PictureJPA (Long isbnPictures, byte [] images){
+
+        this.isbnPicture = isbnPictures;
+        this.image = images;
+
+    }
+
 
 
 }

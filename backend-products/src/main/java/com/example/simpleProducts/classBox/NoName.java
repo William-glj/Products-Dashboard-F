@@ -1,10 +1,16 @@
 package com.example.simpleProducts.classBox;
 
+
+
+import java.util.Base64;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 //A lo mejor esta clase es innecesaria.
@@ -20,45 +26,31 @@ public class NoName {
     }
 
     public byte[] convertImageToBinary() throws IOException {
-        File imageFile = new File(path);
-        byte[] imageBytes = new byte[(int) imageFile.length()];
 
-        try (FileInputStream fis = new FileInputStream(imageFile)) {
-            fis.read(imageBytes);
-
-        }
-
-
-        return imageBytes;
+        Path filePath = Path.of(this.path);
+        return  Files.readAllBytes(filePath);
     }
 
 
     // Convierte binario a imagen y la guarda
-    public void convertBinaryToImage(byte[] data) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(path)) {
-            fos.write(data);
-        }
+    public String  convertBinaryToBase64(byte[] data) throws IOException {
+
+        return  Base64.getEncoder().encodeToString(data);
+
     }
 
-    public static void main(String[] args) {
 
-        try {
-          NoName nmA = new NoName("C:\\Users\\guill\\IdeaProjects\\simpleProducts\\src\\main\\resources\\sofa.jpg");
-          NoName nmB = new NoName("C:\\Users\\guill\\IdeaProjects\\simpleProducts\\src\\main\\resources\\copiaSofa.jpg");
-          byte[] example = nmA.convertImageToBinary();//Recojo los bytes
-            System.out.println("Imagen convertida a binario. Tamaño: " + example.length + " bytes");
-
-            String binary = new BigInteger(1, example).toString(2);//Los convierto en binario
-
-            System.out.println(binary);
-
-            nmB.convertBinaryToImage(example);
+          //NoName nmA = new NoName("C:\\Users\\guill\\IdeaProjects\\simpleProducts\\src\\main\\resources\\sofa.jpg");
+          //NoName nmB = new NoName("C:\\Users\\guill\\IdeaProjects\\simpleProducts\\src\\main\\resources\\copiaSofa.jpg");
 
 
-        } catch (IOException e) {
-            System.err.println("Error al leer la imagen: " + e.getMessage());
-        }
-    }
+
+
+
+
+
+
+
 
 
 
