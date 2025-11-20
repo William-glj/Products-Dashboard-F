@@ -16,7 +16,7 @@ public class PictureJPA {
     private Long isbnPicture;
 
     @Lob
-    @Column(nullable = false)
+    @Column(nullable = false,  columnDefinition = "MEDIUMBLOB")
     private byte[] image;
 
     @OneToOne

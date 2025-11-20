@@ -24,4 +24,9 @@ public class ProductsJPA {
 
     @Enumerated(EnumType.STRING)
     private Category category;
+
+
+
+
+
 }

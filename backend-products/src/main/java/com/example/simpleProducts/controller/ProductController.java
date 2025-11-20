@@ -19,10 +19,6 @@ public class ProductController {
     @Autowired
     private ProductsService productsService;
 
-
-
-
-
     //Obtener todos los productos presentes en la entidad.
     //Ruta: localhost:8080/api/products/all
     @GetMapping("all")
@@ -35,7 +31,8 @@ public class ProductController {
 
         System.out.println("Ejecución de productos existosa");
         System.out.println(productsService.productAddImage());
-
+        //Envio una array en formato JSON llamada List, el frontend tiene que recoger List, esto sucede
+        //en la vista ProductsView.js
         return ResponseEntity.ok(Map.of("List",productsService.productAddImage()));
 
     }

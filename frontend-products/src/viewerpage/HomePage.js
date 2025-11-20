@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { UserOnline } from '../class/UserOnline';
 import { useNotification } from '../class/NotificationContext';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import '../css/HomePage.css';
+import { useNavigate, Link  } from 'react-router-dom';
+
+import '../css/StandardFormat.css';
 
 function HomePage() {
   const { notify } = useNotification(); 
@@ -29,32 +29,37 @@ function HomePage() {
     //tener un valor de respaldo/predefinido para el segmento. Porque si el usuario se vuelve
     //nulo jamas reacciona el useEffect antes del error web.
   return (
-    <>
-      <header>
-        <h1>Bienvenido {user?.firstName || "invitado"}</h1>
-        <button onClick={() => { setUser(null); }}>
-          Cerrar sesión
-        </button>
-
-      </header>
-       <ul>
-          <li>Usuarios</li>
-          <li>
-          <Link to={`/home/${user?.firstName}/products` || "Nada"}>Productos</Link>
-          </li>
-          <li>Extra</li>
-          <li>Extra</li>
-          <li>Extra</li>
-        </ul>
-      <footer>
-         <ul>
-          <li>Lorem ipsum dolor sit amet.</li>
-          <li>Lorem ipsum dolor sit amet.</li>
-          <li>Lorem ipsum dolor sit amet.</li>
-        </ul>
-      </footer>
     
-    </>
+      <div class="container">
+            <aside className="sidebar">
+              <div className="logo">join</div>
+              <nav>
+                <ul>
+                  <li><Link to={`/home/${user?.firstName}/allUsers`}>Usuarios</Link></li>
+                  <li><Link to={`/home/${user?.firstName}/products`}>Productos</Link></li>
+                  <li><Link to={`/home/${user?.firstName}`}>Perfil</Link></li>
+                  <li><span>Registros</span></li>
+                </ul>
+              </nav>
+            </aside>
+            <main className="content">
+               <header className="header">
+          <p className="date">{new Date().toLocaleDateString()}</p>
+          <h1>Bienvenido {user?.firstName || "invitado"}</h1>
+          <h1>Email {user?.companyMail || "invitado"}</h1>
+           <h1>Acceso de tipo {user?.rol || "invitado"}</h1>
+          <button className="logout" onClick={() => setUser(null)}>Cerrar sesión</button>
+        </header>
+
+              <section className="applications">
+                
+                <div className="card-list">
+                  
+                </div>
+              </section>
+            </main>
+       
+      </div>
   );
 }
 

@@ -1,9 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { ProductOnline } from "../class/ProductOnline";
 import { UserOnline } from '../class/UserOnline';
-
+import { Link} from 'react-router-dom';
+import '../css/StandardFormat.css';
 function ProductsView() {
-  const { user, setUser } = useContext(UserOnline);
+  const { user } = useContext(UserOnline);
   const { products, setProducts } = useContext(ProductOnline);
 
   useEffect(() => {
@@ -29,44 +30,51 @@ function ProductsView() {
 
     fetchProducts();
   }, [setProducts]);
+return (
+  <div className="container">
+    <aside className="sidebar">
+      <div className="logo">join</div>
+      <nav>
+        <ul>
+          <li><Link to={`/home/${user?.firstName}/allUsers`}>Usuarios</Link></li>
+          <li><Link to={`/home/${user?.firstName}/products`}>Productos</Link></li>
+          <li><Link to={`/home/${user?.firstName}`}>Perfil</Link></li>
+          <li><span>Registros</span></li>
+        </ul>
+      </nav>
+    </aside>
 
-  return (
-    <>
-      <header>
-         <h1>Bienvenido {user?.firstName || "invitado"}</h1>
-          <button onClick={() => { setUser(null); }}>
-          Cerrar sesión
-          </button>
+    <main className="content">
+      <header className="header">
+        <p className="date">{new Date().toLocaleDateString()}</p>
       </header>
 
-      <div className='firstBox'>
-        {products?.map(p => (
+      <section className="applications">
+        <h2>Productos</h2>
+        <div className="card-list">
+          {products?.map(p => (
+            <div className="card" key={p.isbn}>
+             
+                    <div className='imageBox'>
+                      <img src={`data:image/jpeg;base64,${p.images}`} alt="Imagen del producto" />
 
-          
-
-
-          <div key={p.isbn}>
-            <div className='imageBox'>
-              <p>{p.images}</p>
-
-
-
+                    </div>
+                    <h3>{p.productName}</h3>
+                    <p>{p.information}</p>
+              
+              
             </div>
-            <h3>{p.productName}</h3>
-            <p>{p.information}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
+    </main>
+  </div>
+);
 
-      <footer>
-         <ul>
-          <li>Lorem ipsum dolor sit amet.</li>
-          <li>Lorem ipsum dolor sit amet.</li>
-          <li>Lorem ipsum dolor sit amet.</li>
-        </ul>
-      </footer>
-    </>
-  );
+
+
+
+
 }
 
 export default ProductsView;

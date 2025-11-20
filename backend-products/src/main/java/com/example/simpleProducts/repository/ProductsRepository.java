@@ -12,4 +12,18 @@ import java.util.List;
 public interface ProductsRepository extends CrudRepository<ProductsJPA,Long> {
 
 
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM products p " +
+            "LEFT JOIN picture pic ON p.isbn = pic.isbn_picture " +
+            "JOIN price pr ON p.isbn = pr.isbn_price " +
+            "JOIN stock st ON p.isbn = st.isbn_stock " +
+            "WHERE p.isbn = :isbn_product",
+            nativeQuery = true)
+    Long countProductsInAnotherTable(@Param("isbn_product") Long isbn_product);
+
+
+
+
+
+
 }

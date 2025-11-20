@@ -13,5 +13,7 @@ public interface PictureRepository extends CrudRepository<PictureJPA,Long> {
     @Query("SELECT l.image FROM PictureJPA l WHERE l.product.isbn = :isbd_ex")
     List<String> collectImage(@Param("isbd_ex") Long isbd_ex);
 
+    @Query("SELECT l.image FROM PictureJPA l WHERE l.product.isbn = :isbn_ex")
+    byte[] getBlob(@Param("isbn_ex") Long isbn_ex);
 
 }

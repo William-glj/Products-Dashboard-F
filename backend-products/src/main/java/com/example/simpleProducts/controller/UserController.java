@@ -64,6 +64,7 @@ public class UserController {
     @GetMapping("allUsers")
     public ResponseEntity<?> getAllUsersByRolControl (@RequestParam Rol rol){
         if (rol.equals(Rol.Administrador)){
+            System.out.println("Enviando usuarios");
             return ResponseEntity.ok(Map.of("ListUsers",usersService.readAllUsers()));
         }
 
